@@ -17,7 +17,7 @@ THREE.Loader.prototype = {
 
 	constructor: THREE.Loader,
 
-	crossOrigin: 'anonymous',
+	crossOrigin: undefined,
 
 	addStatusElement: function () {
 
@@ -51,7 +51,7 @@ THREE.Loader.prototype = {
 
 		} else {
 
-			message += ( progress.loaded / 1000 ).toFixed(2) + " KB";
+			message += ( progress.loaded / 1024 ).toFixed(2) + " KB";
 
 		}
 
@@ -62,8 +62,12 @@ THREE.Loader.prototype = {
 	extractUrlBase: function ( url ) {
 
 		var parts = url.split( '/' );
+
+		if ( parts.length === 1 ) return './';
+
 		parts.pop();
-		return ( parts.length < 1 ? '.' : parts.join( '/' ) ) + '/';
+
+		return parts.join( '/' ) + '/';
 
 	},
 
@@ -138,7 +142,7 @@ THREE.Loader.prototype = {
 
 			};
 
-			image.crossOrigin = _this.crossOrigin;
+			if ( _this.crossOrigin !== undefined ) image.crossOrigin = _this.crossOrigin;
 			image.src = url;
 
 		}
@@ -146,7 +150,8 @@ THREE.Loader.prototype = {
 		function create_texture( where, name, sourceFile, repeat, offset, wrap, anisotropy ) {
 
 			var isCompressed = /\.dds$/i.test( sourceFile );
-			var fullPath = texturePath + "/" + sourceFile;
+
+			var fullPath = texturePath + sourceFile;
 
 			if ( isCompressed ) {
 
@@ -405,15 +410,15 @@ THREE.Loader.prototype = {
 
 			// for the moment don't handle displacement texture
 
-			uniforms[ "uDiffuseColor" ].value.setHex( mpars.color );
-			uniforms[ "uSpecularColor" ].value.setHex( mpars.specular );
-			uniforms[ "uAmbientColor" ].value.setHex( mpars.ambient );
+			uniforms[ "diffuse" ].value.setHex( mpars.color );
+			uniforms[ "specular" ].value.setHex( mpars.specular );
+			uniforms[ "ambient" ].value.setHex( mpars.ambient );
 
-			uniforms[ "uShininess" ].value = mpars.shininess;
+			uniforms[ "shininess" ].value = mpars.shininess;
 
 			if ( mpars.opacity !== undefined ) {
 
-				uniforms[ "uOpacity" ].value = mpars.opacity;
+				uniforms[ "opacity" ].value = mpars.opacity;
 
 			}
 

@@ -35,7 +35,7 @@ THREE.Object3D = function () {
 	this.matrixWorld = new THREE.Matrix4();
 
 	this.matrixAutoUpdate = true;
-	this.matrixWorldNeedsUpdate = true;
+	this.matrixWorldNeedsUpdate = false;
 
 	this.visible = true;
 
@@ -107,25 +107,13 @@ THREE.Object3D.prototype = {
 
 	},
 
-	applyMatrix: function () {
+	applyMatrix: function ( matrix ) {
 
-		var m1 = new THREE.Matrix4();
+		this.matrix.multiplyMatrices( matrix, this.matrix );
 
-		return function ( matrix ) {
+		this.matrix.decompose( this.position, this.quaternion, this.scale );
 
-			this.matrix.multiplyMatrices( matrix, this.matrix );
-
-			this.position.setFromMatrixPosition( this.matrix );
-
-			this.scale.setFromMatrixScale( this.matrix );
-
-			m1.extractRotation( this.matrix );
-
-			this.quaternion.setFromRotationMatrix( m1 );
-
-		}
-
-	}(),
+	},
 
 	setRotationFromAxisAngle: function ( axis, angle ) {
 
