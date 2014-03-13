@@ -617,6 +617,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.domElement.addEventListener( 'touchstart', touchstart, false );
 	this.domElement.addEventListener( 'touchend', touchend, false );
 	this.domElement.addEventListener( 'touchmove', touchmove, false );
+	if (this.domElement === document) {
+		window.addEventListener( 'keydown', onKeyDown, false );
+	}
+
     
     // Cross-browser mousewheel events, based on https://developer.mozilla.org/en-US/docs/Web/Reference/Events/wheel?redirectlocale=en-US&redirectslug=DOM%2FMozilla_event_reference%2Fwheel
     // creates a "addWheelListener" method
@@ -691,8 +695,6 @@ THREE.OrbitControls = function ( object, domElement ) {
     })(window,document);
     
     addWheelListener(this.domElement, onMouseWheel, false);
-
-	window.addEventListener( 'keydown', onKeyDown, false );
 
 	// force an update at start
 	this.update();
